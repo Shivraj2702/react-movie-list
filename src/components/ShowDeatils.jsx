@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Typography, useMediaQuery } from '@mui/material';
 import StarRating from './StarRating';
 import TicketBookingForm from './TicketBookingForm';
 
-
-const ShowSummary = () => {
+const ShowDetails = () => {
   const { showId } = useParams();
   const [showDetails, setShowDetails] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const isMobileOrTablet = useMediaQuery('(max-width: 960px)');
 
   useEffect(() => {
     fetch(`https://api.tvmaze.com/shows/${showId}`)
@@ -30,15 +30,24 @@ const ShowSummary = () => {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Card sx={{ maxWidth: 600, margin: '20px', borderRadius: '10px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+      <Card
+        sx={{
+          width: '100%',
+          maxWidth: 600,
+          margin: '20px',
+          borderRadius: '10px',
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+        }}
+      >
         <CardMedia
           component="img"
           height="300"
           image={showDetails.image.medium}
           alt={showDetails.name}
+          sx={{ objectFit: 'cover', borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}
         />
-        <CardContent>
+        <CardContent style={{ flex: 1 }}>
           <Typography variant="h4" gutterBottom>
             {showDetails.name}
           </Typography>
@@ -56,9 +65,9 @@ const ShowSummary = () => {
           Book Ticket
         </Button>
       </Card>
-      {showForm && <TicketBookingForm movieDetails={showDetails} />}
+      {showForm && isMobileOrTablet && <TicketBookingForm movieDetails={showDetails} />}
     </div>
   );
 };
 
-export default ShowSummary;
+export default ShowDetails;

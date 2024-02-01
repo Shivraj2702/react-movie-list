@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
-import { Card, CardContent, Typography, TextField, Button } from '@mui/material';
+import { Card, CardContent, Typography, TextField, Button, useMediaQuery } from '@mui/material';
 
 const TicketBookingForm = ({ movieDetails }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
   });
+
+  const isMobile = useMediaQuery('(max-width: 600px)');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,13 +20,16 @@ const TicketBookingForm = ({ movieDetails }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-  
     const userData = {
       movie: movieDetails.name,
       name: formData.name,
       email: formData.email,
     };
-    localStorage.setItem('userData', JSON.stringify(userData))
+
+    // Generate a unique key based on the current timestamp
+    const userKey = `userData_${Date.now()}`;
+
+    localStorage.setItem(userKey, JSON.stringify(userData));
     console.log('Form submitted:', formData);
 
     setFormData({
@@ -36,7 +40,7 @@ const TicketBookingForm = ({ movieDetails }) => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Card sx={{ width: 300, margin: '20px', padding: '10px', backgroundColor: '#f0f0f0' }}>
+      <Card sx={{ width: isMobile ? '80%' : 300, margin: '20px', padding: '10px', backgroundColor: '#f0f0f0' }}>
         <CardContent>
           <Typography variant="h6" gutterBottom style={{ color: '#333' }}>
             Booking Form
